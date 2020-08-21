@@ -1,24 +1,31 @@
 import 'dart:async';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_webservice/geolocation.dart' as APIGeolocation;
 import 'package:google_maps_webservice/directions.dart' as APIDirections;
+import 'package:google_maps_webservice/geolocation.dart' as APIGeolocation;
+import 'package:uber_rider/src/util/protected_data.dart';
 
+// !! Utility Class for handling Map Logic across app
+class MapUtil {
+// TODO !! This is using api key here, change it
+  final directions =
+      APIDirections.GoogleMapsDirections(apiKey: google_maps_api_key);
+  final geolocation =
+      APIGeolocation.GoogleMapsGeolocation(apiKey: google_maps_api_key);
 
-class MapUtil{
-
-  final directions = APIDirections.GoogleMapsDirections(apiKey: 'AIzaSyDPaFRwkTfLGUgDovW6ZrldT9e77mYR7sU');
-  final geolocation = APIGeolocation.GoogleMapsGeolocation(apiKey: 'AIzaSyDPaFRwkTfLGUgDovW6ZrldT9e77mYR7sU');
-
-  Future<LatLng> getCurrentLocation() async{
+  // !! Get the User Current location
+  Future<LatLng> getCurrentLocation() async {
     LatLng currentLocation;
-    APIGeolocation.GeolocationResponse resLocation = await geolocation.getGeolocation();
+    APIGeolocation.GeolocationResponse resLocation =
+        await geolocation.getGeolocation();
     if (resLocation.isOkay) {
-      currentLocation = new LatLng(resLocation.location.lat, resLocation.location.lng);
+      currentLocation =
+          new LatLng(resLocation.location.lat, resLocation.location.lng);
       //print("Actual: ${resLocation.location.lat}, ${resLocation.location.lng}");
     } else {
       print(resLocation.errorMessage);
     }
-    return currentLocation; 
+    return currentLocation;
   }
 
   Future<List<LatLng>> getRoutePath(LatLng origin, LatLng destin) async{

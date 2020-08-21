@@ -7,6 +7,7 @@ import 'package:uber_driver/ui/notifications.dart';
 import 'package:uber_driver/ui/profile.dart';
 import 'package:uber_driver/ui/promotions.dart';
 import 'package:uber_driver/ui/recent_transactions.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {

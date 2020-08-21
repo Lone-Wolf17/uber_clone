@@ -1,18 +1,18 @@
 import 'dart:async';
-import 'package:uber_rider/src/config/configs.dart';
-import 'package:uber_rider/src/model/place_item_res.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
+import 'package:uber_rider/src/model/place_item_res.dart';
 import 'package:uber_rider/src/model/step_res.dart';
+import 'package:uber_rider/src/util/protected_data.dart';
 
 String dfsdfadf =
-    "https://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&sensor=false&mode=driving&key=AIzaSyDPaFRwkTfLGUgDovW6ZrldT9e77mYR7sU";
+    "https://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&sensor=false&mode=driving&key=$google_maps_api_key";
 
 class PlaceService {
   static Future<List<PlaceItemRes>> searchPlace(String keyWord) async {
     String url =
-        "https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyDPaFRwkTfLGUgDovW6ZrldT9e77mYR7sU&language=pt&query=" +
+        "https://maps.googleapis.com/maps/api/place/textsearch/json?key=$google_maps_api_key&language=pt&query=" +
             Uri.encodeQueryComponent(keyWord);
 
     print("search >>: " + url);
@@ -43,7 +43,7 @@ class PlaceService {
         output +
         "?origin=" +
         parameters +
-        "&key=AIzaSyDPaFRwkTfLGUgDovW6ZrldT9e77mYR7sU";
+        "&key=$google_maps_api_key";
     final JsonDecoder _decoder = JsonDecoder();
     return http.get(url).then((http.Response response) {
       String res = response.body;

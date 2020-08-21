@@ -1,8 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:flutter/services.dart';
 import 'package:uber_rider/src/model/place_item_res.dart';
 import 'package:uber_rider/src/ui/widgets/functionalButton.dart';
 import 'package:uber_rider/src/ui/widgets/home_menu_drawer.dart';
@@ -18,12 +19,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   _MyHomePageState();
+
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
   Completer<GoogleMapController> _completer = Completer();
   MapUtil mapUtil = MapUtil();
   Location _locationService = Location();
   LatLng currentLocation;
-  LatLng _center = LatLng(-8.913025, 13.202462);
+  LatLng _center = LatLng(6.5765376, 3.3488895);
   bool _permission = false;
   List<Marker> _markers = List();
   List<Polyline> routes = new List();
@@ -55,12 +57,14 @@ class _MyHomePageState extends State<MyHomePage> {
             mapType: MapType.normal,
             initialCameraPosition: CameraPosition(
               target: _center,
-              zoom: 13.0,
+              zoom: 15.0,
             ),
             onMapCreated: (GoogleMapController controller) {
               _completer.complete(controller);
             },
+            myLocationEnabled: true,
             markers: Set<Marker>.of(_markers),
+            compassEnabled: true,
             polylines: Set<Polyline>.of(routes),
           ),
           Positioned(
@@ -206,14 +210,14 @@ class _MyHomePageState extends State<MyHomePage> {
       bool serviceStatus = await _locationService.serviceEnabled();
       print("Service status: $serviceStatus");
       if (serviceStatus) {
-        _permission = await _locationService.requestPermission();
+        _permission = (await _locationService.requestPermission()) as bool;
         print("Permission: $_permission");
         if (_permission) {
           location = await _locationService.getLocation();
           Marker marker = Marker(
             markerId: MarkerId('from_address'),
             position: LatLng(location.latitude, location.longitude),
-            infoWindow: InfoWindow(title: 'Minha localização'),
+            infoWindow: InfoWindow(title: 'My location'),
           );
           if (mounted) {
             setState(() {

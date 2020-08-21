@@ -1,9 +1,11 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_rider/src/blocs/place_bloc.dart';
 import 'package:uber_rider/src/model/place_item_res.dart';
 import 'package:uber_rider/src/ui/widgets/home_menu_drawer.dart';
+import 'package:uber_rider/src/util/map_util.dart';
 
 class RidePickerPage extends StatefulWidget {
   final String selectedAddress;
@@ -18,18 +20,25 @@ class RidePickerPage extends StatefulWidget {
 class _RidePickerPageState extends State<RidePickerPage> {
   var _addressController;
   var placeBloc = PlaceBloc();
-  _RidePickerPageState();
   Completer<GoogleMapController> _controller = Completer();
 
-  static final CameraPosition _cameraPosition = CameraPosition(
-    target: LatLng(-8.913025, 13.202462),
-    zoom: 17.0,
-  );
+  _RidePickerPageState() {
+    getCurrentLocation();
+  }
+
+  Future<void> getCurrentLocation() async {
+    MapUtil mapUtil = MapUtil();
+    LatLng currentLocation = await mapUtil.getCurrentLocation();
+    _cameraPosition = CameraPosition(target: currentLocation, zoom: 15.0);
+  }
+
+  CameraPosition _cameraPosition =
+      CameraPosition(target: LatLng(6.5765376, 3.3488895), zoom: 10);
 
   @override
   void initState() {
-    _addressController = TextEditingController(text: "");
     super.initState();
+    _addressController = TextEditingController(text: "");
   }
 
   @override
@@ -223,3 +232,5 @@ class _RidePickerPageState extends State<RidePickerPage> {
     );
   }
 }
+
+
